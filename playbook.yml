@@ -1,68 +1,67 @@
 ---
- - hosts: all
-   tasks:
-   become: yes
- - name: Clone a github repository
-   git:
+- hosts: [test]
+  tasks:
+  - name: Clone a github repository
+    git:
        repo: https://github.com/Jeniston14/wsr-skillcloud
        dest: /home/debian/repos/
        clone: yes
        update: yes
-   tasks:
- - name: Upgrade all apt packages
-   apt: upgrade=dist force_apt_get=yes
-   tasks:
- - name: Update apt cache and make sure curl is installed
-   apt:
+  tasks:
+  - name: Upgrade all apt packages
+    apt: upgrade=dist force_apt_get=yes
+  tasks:
+  - name: Update apt cache and make sure curl is installed
+    apt:
         name: curl
         update_cache: yes
-   tasks:
- - name: Allow everything and enable UFW
-   community.general.ufw:
+  tasks:
+  - name: Allow everything and enable UFW
+    community.general.ufw:
          state: enabled
          policy: allow
- - name: Allow all access to tcp port 80
-   community.general.ufw:
+  - name: Allow all access to tcp port 80
+    community.general.ufw:
         rule: allow
         port: '80'
         proto: tcp
- - name: Allow all access to tcp port 8080
-   community.general.ufw:
+  - name: Allow all access to tcp port 8080
+    community.general.ufw:
         rule: allow
         port: '80'
         proto: tcp
- - name: Allow all access to tcp port 1834
-   community.general.ufw:
+  - name: Allow all access to tcp port 1834
+    community.general.ufw:
         rule: allow
         port: '1834'
         proto: tcp
-   tasks:
- - name: install docker
-   apt:
+  tasks:
+  - name: install docker
+    apt:
         name: "{{item}}"
         state: latest
         update_cache: yes
-   loop:
+    loop:
         - docker-ce
         - docker-ce-cli
         - containerd.io
-   tasks:
- - name: сreate directory
-   file:
+  tasks:
+  - name: сreate directory
+    file:
        path=/skillcloud-nginx
        state=directory
-   tasks:
- - name: Stop and Start ssh
-   service:
+  tasks:
+  - name: Stop and Start ssh
+    service:
        name: ssh
        state: "{{ item }}"
-   with_items:
+    with_items:
        - stopped
        - started
- - name: Stop and Start ssh
-   service:
-       name: ssh
+  - name: Stop and Start ufw
+    service:
+       name: ufw
        state: "{{ item }}"
-   with_items:
+    with_items:
        - stopped
        - started
