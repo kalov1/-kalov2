@@ -4,7 +4,7 @@
   - name: Clone a github repository
     git:
        repo: https://github.com/Jeniston14/wsr-skillcloud
-       dest: /home/debian/repos/
+       dest: /home
        clone: yes
        update: yes
   tasks:
